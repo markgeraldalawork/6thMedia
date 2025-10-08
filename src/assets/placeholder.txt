@@ -1,0 +1,7 @@
+Replace these placeholders with your real assets:
+- src/assets/video/vid.mp4
+- src/assets/logoWObg.png
+- src/assets/gallery1.jpg
+- src/assets/gallery2.jpg
+- src/assets/gallery3.jpg
+- src/assets/gallery4.jpg
