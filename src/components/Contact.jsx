@@ -39,7 +39,7 @@ export default function Contact() {
           <p className={`mt-4 ${status.ok ? 'text-green-400' : 'text-red-400'}`}>{status.msg}</p>
         )}
 
-        <p className="mt-3 text-sm text-gray-500">(EmailJS placeholders are present — replace them with your IDs.)</p>
+        {/* <p className="mt-3 text-sm text-gray-500">(EmailJS placeholders are present — replace them with your IDs.)</p> */}
       </div>
     </section>
   )
