@@ -15,9 +15,22 @@ export default function Navbar() {
   return (
     <header className={`fixed w-full z-50 transition-all ${scrolled ? 'bg-black/80 backdrop-blur-md py-3' : 'bg-black/40 py-5'}`}>
       <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
-        <div className="flex items-center" data-aos="fade-down">
-          <img src={logo} alt="logo" className="h-12 md:h-14" />
-        </div>
+<div className="flex items-center" data-aos="fade-down">
+  <img
+    src={logo}
+    alt="logo"
+    className="h-12 md:h-14 cursor-pointer"
+    onClick={() => {
+      // Smooth scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      // Remove hash from the URL (if any)
+      if (window.location.hash) {
+        history.replaceState(null, '', window.location.pathname + window.location.search)
+      }
+    }}
+  />
+</div>
+
 
         <nav className="hidden md:flex gap-8 items-center">
           <a href="#about" className="hover:text-orange transition">About</a>
