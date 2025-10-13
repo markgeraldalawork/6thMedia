@@ -11,7 +11,11 @@ import Footer from './components/Footer'
 
 export default function App() {
   useEffect(() => {
-    AOS.init({ duration: 900, once: true })
+    AOS.init({ 
+      duration: 900, 
+      once: false,
+      mirror:true,
+    easing:'ease-in-out', })
   }, [])
 
   return (

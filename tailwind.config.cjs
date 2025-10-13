@@ -18,9 +18,14 @@ module.exports = {
             opacity:'0.6',
           },
         },
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'scale(0.97)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
       },
       animation: {
         smoothBounce: 'smoothBounce 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite', 
+        fadeIn: 'fadeIn 0.3s ease-out',
       },
     },
   },
