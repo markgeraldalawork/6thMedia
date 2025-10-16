@@ -6,7 +6,3 @@ How to run
 3. npm install
 4. npm run dev
 
-Notes
-- Replace placeholders in src/components/Contact.jsx with your EmailJS service/template/public key when ready.
-- Replace `src/assets/video/vid.mp4` with your hero video and other assets in `src/assets`.
-# 6thMedia
