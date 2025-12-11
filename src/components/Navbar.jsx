@@ -35,7 +35,7 @@ export default function Navbar() {
         <nav className="hidden md:flex gap-8 items-center">
           <a href="#about" className="hover:text-orange transition">About</a>
           <a href="#portfolio" className="hover:text-orange transition">Portfolio</a>
-          <a href="#services" className="hover:text-orange transition">Services</a>
+          <a href="#services-menu" className="hover:text-orange transition">Services</a>
           <a href="#contact" className="hover:text-orange transition">Contact</a>
         </nav>
 
@@ -68,10 +68,10 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       <div className={`md:hidden ${open ? 'block' : 'hidden'} bg-black/90 mt-2`}>
-        <div className="flex flex-col px-6 py-4 gap-4">
+        <div className="flex items-center flex-col px-6 py-4 gap-4">
           <a href="#about" onClick={() => setOpen(false)}>About</a>
           <a href="#portfolio" onClick={() => setOpen(false)}>Portfolio</a>
-          <a href="#services" onClick={() => setOpen(false)}>Services</a>
+          <a href="#services-menu" onClick={() => setOpen(false)}>Services</a>
           <a href="#contact" onClick={() => setOpen(false)}>Contact</a>
         </div>
       </div>

@@ -1,0 +1,1 @@
+const _="/assets/589323096_1423385033123261_7052424067180730983_n-C9V2GFJK.jpg";export{_ as default};

@@ -1,91 +1,121 @@
-import React, { useState } from "react"
-import gallery1 from "../assets/gallery1.jpg"
-import gallery2 from "../assets/gallery2.jpg"
-import gallery3 from "../assets/gallery3.jpg"
-import gallery4 from "../assets/gallery4.jpg"
+import React, { useState, useEffect } from "react";
+import logo from "../assets/logoWObg.png";
+import Gallery from "./Gallery";
+
+// ⚡ Import image folders (not eager)
+const studioImages = import.meta.glob("../assets/studio/*.{jpg,jpeg,png,webp,avif}");
+const weddingImages = import.meta.glob("../assets/weddingCoverage/*.{jpg,jpeg,png,webp,avif}");
+const productImages = import.meta.glob("../assets/productShoot/*.{jpg,jpeg,png,webp,avif}");
+const portraitImages = import.meta.glob("../assets/portraitSession/*.{jpg,jpeg,png,webp,avif}");
+
+// Helper: load a folder’s images only when needed
+async function loadPhotos(folder) {
+  const imports = await Promise.all(Object.values(folder).map((f) => f()));
+  return imports.map((mod) => mod.default);
+}
 
 export default function Portfolio() {
-  const [active, setActive] = useState(null)
+  const [active, setActive] = useState(null);
+  const [fullscreen, setFullscreen] = useState(null);
+  const [loadedImages, setLoadedImages] = useState({});
+  const [thumbs, setThumbs] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [galleryCache, setGalleryCache] = useState({});
 
-  const items = [
-    { src: gallery1, label: "Studio Session", photos: [gallery1, gallery2] },
-    { src: gallery2, label: "Wedding Coverage", photos: [gallery2, gallery3] },
-    { src: gallery3, label: "Product Shoot", photos: [gallery3, gallery4] },
-    { src: gallery4, label: "Portrait Session", photos: [gallery4, gallery1] },
-  ]
+  const folders = [
+    { label: "Studio Session", folder: studioImages },
+    { label: "Wedding Coverage", folder: weddingImages },
+    { label: "Product Shoot", folder: productImages },
+    { label: "Portrait Session", folder: portraitImages },
+  ];
+
+  // Load thumbs
+  useEffect(() => {
+    async function loadThumbs() {
+      const results = await Promise.all(
+        folders.map(async ({ folder, label }) => {
+          const keys = Object.keys(folder);
+          if (!keys.length) return null;
+          const firstKey = keys[0];
+          const mod = await folder[firstKey]();
+          return { label, src: mod.default, folder };
+        })
+      );
+      setThumbs(results.filter(Boolean));
+    }
+    loadThumbs();
+  }, []);
+
+  const handleImageLoad = (src) => setLoadedImages((prev) => ({ ...prev, [src]: true }));
+
+  const handleCategoryClick = async (item) => {
+    setLoading(true);
+    const start = Date.now();
+    let photos = galleryCache[item.label];
+
+    if (!photos) {
+      photos = await loadPhotos(item.folder);
+      setGalleryCache((prev) => ({ ...prev, [item.label]: photos }));
+    }
+
+    const elapsed = Date.now() - start;
+    const delay = Math.max(0, 1500 - elapsed);
+    setTimeout(() => {
+      setActive({ label: item.label, photos });
+      setLoading(false);
+    }, delay);
+  };
+
+  // Preload other galleries once one is opened
+  useEffect(() => {
+    if (active && Object.keys(galleryCache).length === 1) {
+      folders.forEach(async ({ label, folder }) => {
+        if (!galleryCache[label]) {
+          const photos = await loadPhotos(folder);
+          setGalleryCache((prev) => ({ ...prev, [label]: photos }));
+        }
+      });
+    }
+  }, [active]);
+
+  // ESC key handler
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        if (fullscreen) setFullscreen(null);
+        else if (active) setActive(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [fullscreen, active]);
+
+  // Lock background scroll when modal/fullscreen open
+  useEffect(() => {
+    document.body.style.overflow = active || fullscreen ? "hidden" : "auto";
+    return () => (document.body.style.overflow = "auto");
+  }, [active, fullscreen]);
 
   return (
-    <section id="portfolio" className="py-20 bg-transparent">
+    <section id="portfolio" className="py-40 bg-transparent relative">
       <div className="max-w-6xl mx-auto px-6">
-        <h2
-          className="text-3xl text-orange font-semibold mb-8 text-center"
-          data-aos="fade-up"
-        >
+        <h2 className="text-3xl text-orange font-semibold mb-8 text-center" data-aos="fade-up">
           Our Work
         </h2>
 
-        {/* Portfolio Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {items.map((it, idx) => (
-            <div
-              key={idx}
-              className="relative rounded-lg overflow-hidden group cursor-pointer"
-              data-aos="zoom-in"
-              onClick={() => setActive(it)}
-            >
-              <img
-                src={it.src}
-                alt={it.label}
-                className="w-full h-64 object-cover group-hover:scale-105 transition-transform"
-              />
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
-                <div className="w-full text-center py-3 text-orange font-medium">
-                  {it.label}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <Gallery
+          thumbs={thumbs}
+          handleCategoryClick={handleCategoryClick}
+          handleImageLoad={handleImageLoad}
+          loadedImages={loadedImages}
+          active={active}
+          setActive={setActive}
+          fullscreen={fullscreen}
+          setFullscreen={setFullscreen}
+          loading={loading}
+          logo={logo}
+        />
       </div>
-
-{/* Modal */}
-{active && (
-  <div
-    className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn"
-    onClick={() => setActive(null)}
-  >
-    <div
-      className="bg-[#EDEAE0]/95 rounded-2xl max-w-6xl w-[95%] max-h-[90vh] overflow-y-auto p-8 relative shadow-2xl"
-      onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
-    >
-      {/* Close Button */}
-      <button
-        onClick={() => setActive(null)}
-        className="absolute top-4 right-5 text-gray-500 hover:text-black text-4xl font-bold"
-      >
-        &times;
-      </button>
-
-      {/* Title */}
-      <h3 className="text-3xl font-semibold text-[#1A1A1A] mb-6 text-center">
-        {active.label}
-      </h3>
-
-      {/* Gallery Grid */}
-      <div className="columns-1 sm:columns-2 md:columns-3 gap-4 space-y-4">
-        {active.photos.map((photo, i) => (
-          <img
-            key={i}
-            src={photo}
-            alt=""
-            className="w-full rounded-lg mb-4 break-inside-avoid hover:scale-[1.02] transition-transform duration-300"
-          />
-        ))}
-      </div>
-    </div>
-  </div>
-)}
-
     </section>
-  )
+  );
 }
