@@ -30,8 +30,6 @@ export default function Navbar() {
     }}
   />
 </div>
-
-
         <nav className="hidden md:flex gap-8 items-center">
           <a href="#about" className="hover:text-orange transition">About</a>
           <a href="#portfolio" className="hover:text-orange transition">Portfolio</a>

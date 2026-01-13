@@ -16,6 +16,11 @@ import menuImage4 from './assets/menu04.webp';
 import menuImage5 from './assets/menu05.jpg';
 import menuImage6 from './assets/menu06.jpg';
 import menuImage7 from './assets/menu07.jpg';
+import menuImage8 from './assets/menu08.jpg';
+import menuImage9 from './assets/menu09.jpg';
+import menuImage10 from './assets/menu10.jpg';  
+import menuImage11 from './assets/menu11.jpg';
+import menuImage12 from './assets/menu12.jpg';
 import { image, menu } from 'framer-motion/client';
 
 // 🧩 Lazy-load Portfolio (code-split)
@@ -60,7 +65,33 @@ const items = [
     image: menuImage7,
     title:'Events',
     description: 'Birthday'
+  },
+  {
+    image: menuImage8,
+    title:'Studio',
+    description: 'Portrait'
+  },
+  {
+    image: menuImage9,
+    title:'Studio',
+    description: 'Family'
+  },
+  {
+    image: menuImage10,
+    title:'Studio',
+    description: 'Portrait'
+  },
+  {
+    image: menuImage11,
+    title:'Studio',
+    description: 'Portrait'
+  },
+  {
+    image: menuImage12,
+    title:'Studio',
+    description: 'Creative'
   }
+  
 ];
 
   useEffect(() => {

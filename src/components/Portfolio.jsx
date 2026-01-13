@@ -5,7 +5,7 @@ import Gallery from "./Gallery";
 // ⚡ Import image folders (not eager)
 const studioImages = import.meta.glob("../assets/studio/*.{jpg,jpeg,png,webp,avif}");
 const weddingImages = import.meta.glob("../assets/weddingCoverage/*.{jpg,jpeg,png,webp,avif}");
-const productImages = import.meta.glob("../assets/productShoot/*.{jpg,jpeg,png,webp,avif}");
+const ratedXImages = import.meta.glob("../assets/RatedX/*.{jpg,jpeg,png,webp,avif}");
 const portraitImages = import.meta.glob("../assets/portraitSession/*.{jpg,jpeg,png,webp,avif}");
 
 // Helper: load a folder’s images only when needed
@@ -25,7 +25,7 @@ export default function Portfolio() {
   const folders = [
     { label: "Studio Session", folder: studioImages },
     { label: "Wedding Coverage", folder: weddingImages },
-    { label: "Product Shoot", folder: productImages },
+    { label: "Uncovered Yet Concealed", folder: ratedXImages },
     { label: "Portrait Session", folder: portraitImages },
   ];
 
