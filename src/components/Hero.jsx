@@ -1,17 +1,19 @@
-import React, { useRef, useEffect } from "react"
+import React, { useRef, useEffect, useState } from "react";
 
 export default function Hero() {
-  const vidRef = useRef(null)
+  const vidRef = useRef(null);
+  const [videoReady, setVideoReady] = useState(false);
 
+  // Parallax scroll effect
   useEffect(() => {
     const handleScroll = () => {
       if (vidRef.current) {
-        vidRef.current.style.transform = `translate3d(0, ${window.scrollY * 0.25}px, 0)`
+        vidRef.current.style.transform = `translate3d(0, ${window.scrollY * 0.25}px, 0)`;
       }
-    }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <>
@@ -23,19 +25,22 @@ export default function Hero() {
         {/* 🎥 Video background */}
         <video
           ref={vidRef}
-          className="absolute inset-0 w-full h-full object-cover"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+            videoReady ? "opacity-100" : "opacity-0"
+          }`}
           autoPlay
           muted
           loop
           playsInline
+          preload="auto"
           poster="/video/hero-poster.webp"
-          aria-hidden="true"
+          onCanPlay={() => setVideoReady(true)}
         >
           <source src="/video/vid.webm" type="video/webm" />
           <source src="/video/vid.mp4" type="video/mp4" />
         </video>
 
-        {/* 🟣 Overlay gradient (lighter so video is visible) */}
+        {/* 🟣 Overlay gradient */}
         <div
           className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/50"
           aria-hidden="true"
@@ -76,5 +81,5 @@ export default function Hero() {
         individuals and businesses.
       </section>
     </>
-  )
+  );
 }

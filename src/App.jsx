@@ -7,6 +7,7 @@ import Services from './components/Services';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import Intro from './components/Intro';
+import LoadingIntro from './components/LoadingIntro';
 import InfiniteMenu from './components/ServicesMenu';
 import PageTransition from './components/PageTransition';
 import menuImage1 from './assets/menu01.jpeg';
@@ -103,31 +104,64 @@ const items = [
     });
   }, []);
 
+  // return (
+  //   <div className="bg-[var(--bg)] text-[var(--text)] min-h-screen">
+  //     {/* Intro overlay */}
+  //     {!introDone && <LoadingIntro onDone={() => setIntroDone(true)} />}
+
+  //     {/* Main content wrapped in PageTransition */}
+  //     {/* {introDone && (
+  //       <PageTransition> */} 
+  //         <Navbar />
+  //         <Hero />
+  //         <main>
+  //           <About />
+
+  //           <Suspense fallback={<div className="text-center py-10 text-gray-400">Loading portfolio...</div>}>
+  //             <Portfolio />
+  //           </Suspense>
+  //         <div className="relative w-[100vw] mx-auto h-[900px] flex justify-center items-center bg-transparent" >
+  //           <InfiniteMenu items={items}/>
+  //         </div>
+  //             {/* <Services /> */}
+  //           <Contact />
+  //         </main>
+  //         <Footer />
+  //       {/* </PageTransition>
+  //     )} */}
+  //   </div>
+  // );
+
+
+
+
   return (
-    <div className="bg-black text-white min-h-screen">
-      {/* Intro overlay */}
-      {!introDone && <Intro onDone={() => setIntroDone(true)} />}
+  <div className="bg-[var(--bg)] text-[var(--text)] min-h-screen">
+    
+    {!introDone && <Intro onDone={() => setIntroDone(true)} />}
 
-      {/* Main content wrapped in PageTransition */}
-      {/* {introDone && (
-        <PageTransition> */} 
-          <Navbar />
-          <Hero />
-          <main>
-            <About />
+    {introDone && (
+      <>
+        <Navbar />
+        <Hero />
+        <main>
+          <About />
 
-            <Suspense fallback={<div className="text-center py-10 text-gray-400">Loading portfolio...</div>}>
-              <Portfolio />
-            </Suspense>
-<div style={{ height: '800px', position: 'relative' }} >
-  <InfiniteMenu items={items}/>
-</div>
-              {/* <Services /> */}
-            <Contact />
-          </main>
-          <Footer />
-        {/* </PageTransition>
-      )} */}
-    </div>
-  );
+          <Suspense fallback={<div className="text-center py-10 text-gray-400">Loading portfolio...</div>}>
+            <Portfolio />
+          </Suspense>
+
+          <div className="relative w-[100vw] mx-auto h-[900px] flex justify-center items-center bg-transparent">
+            <InfiniteMenu items={items}/>
+          </div>
+
+          <Contact />
+        </main>
+
+        <Footer />
+      </>
+    )}
+
+  </div>
+);
 }

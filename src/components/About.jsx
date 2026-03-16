@@ -35,7 +35,7 @@ export default function About() {
           <h2 className="text-3xl text-orange font-semibold mb-4">
             About 6th Media Studio
           </h2>
-          <p className="text-gray-300 leading-relaxed mb-4">
+          <p className="text-[var(--text)] leading-relaxed mb-4">
             6th Media Studio, based in Legazpi City, Albay, is a creative media studio
             specializing in high-quality photography and video production. We capture
             authentic stories, memorable events, and brand milestones with cinematic

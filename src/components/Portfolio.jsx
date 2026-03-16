@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from "react";
 import logo from "../assets/logoWObg.png";
 import Gallery from "./Gallery";
+import { fetchPhotos } from "../sanityClient";
 
-// ⚡ Import image folders (not eager)
-const studioImages = import.meta.glob("../assets/studio/*.{jpg,jpeg,png,webp,avif}");
-const weddingImages = import.meta.glob("../assets/weddingCoverage/*.{jpg,jpeg,png,webp,avif}");
-const ratedXImages = import.meta.glob("../assets/RatedX/*.{jpg,jpeg,png,webp,avif}");
-const portraitImages = import.meta.glob("../assets/portraitSession/*.{jpg,jpeg,png,webp,avif}");
-
-// Helper: load a folder’s images only when needed
-async function loadPhotos(folder) {
-  const imports = await Promise.all(Object.values(folder).map((f) => f()));
-  return imports.map((mod) => mod.default);
-}
+const CATEGORIES = [
+  "Studio Session",
+  "Wedding Coverage",
+  "Uncovered Yet Concealed",
+  "Portrait Session",
+];
 
 export default function Portfolio() {
   const [active, setActive] = useState(null);
@@ -20,63 +16,56 @@ export default function Portfolio() {
   const [loadedImages, setLoadedImages] = useState({});
   const [thumbs, setThumbs] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [galleryCache, setGalleryCache] = useState({});
 
-  const folders = [
-    { label: "Studio Session", folder: studioImages },
-    { label: "Wedding Coverage", folder: weddingImages },
-    { label: "Uncovered Yet Concealed", folder: ratedXImages },
-    { label: "Portrait Session", folder: portraitImages },
-  ];
+  const handleImageLoad = (src) =>
+    setLoadedImages((prev) => ({ ...prev, [src]: true }));
 
-  // Load thumbs
   useEffect(() => {
-    async function loadThumbs() {
-      const results = await Promise.all(
-        folders.map(async ({ folder, label }) => {
-          const keys = Object.keys(folder);
-          if (!keys.length) return null;
-          const firstKey = keys[0];
-          const mod = await folder[firstKey]();
-          return { label, src: mod.default, folder };
-        })
-      );
-      setThumbs(results.filter(Boolean));
+  async function testFetch() {
+    const data = await fetchPhotos();
+    // console.log("Photos from Sanity portfolio:", data);
+  }
+  testFetch();
+}, []);
+
+  // 🔑 Fetch photos from Sanity
+  useEffect(() => {
+    async function loadFromSanity() {
+      const data = await fetchPhotos();
+
+      // Group by category
+      const grouped = {};
+      data.forEach((item) => {
+        if (!grouped[item.category]) grouped[item.category] = [];
+        if (item.imageUrl) grouped[item.category].push(item.imageUrl);
+      });
+
+      // Build thumbnails
+      const thumbsData = CATEGORIES.filter(cat => grouped[cat]?.length).map(cat => ({
+        label: cat,
+        src: grouped[cat][0],
+        photos: grouped[cat],
+        
+      }));
+// console.log("ThumbsData:", thumbsData);
+
+      setThumbs(thumbsData);
     }
-    loadThumbs();
+
+    loadFromSanity();
   }, []);
 
-  const handleImageLoad = (src) => setLoadedImages((prev) => ({ ...prev, [src]: true }));
-
-  const handleCategoryClick = async (item) => {
+  const handleCategoryClick = (item) => {
+    if (!item.photos || item.photos.length === 0) return; 
     setLoading(true);
-    const start = Date.now();
-    let photos = galleryCache[item.label];
-
-    if (!photos) {
-      photos = await loadPhotos(item.folder);
-      setGalleryCache((prev) => ({ ...prev, [item.label]: photos }));
-    }
-
-    const elapsed = Date.now() - start;
-    const delay = Math.max(0, 1500 - elapsed);
     setTimeout(() => {
-      setActive({ label: item.label, photos });
-      setLoading(false);
-    }, delay);
-  };
-
-  // Preload other galleries once one is opened
-  useEffect(() => {
-    if (active && Object.keys(galleryCache).length === 1) {
-      folders.forEach(async ({ label, folder }) => {
-        if (!galleryCache[label]) {
-          const photos = await loadPhotos(folder);
-          setGalleryCache((prev) => ({ ...prev, [label]: photos }));
-        }
+      setActive({
+        label: item.label,
+        photos: item.photos,
       });
-    }
-  }, [active]);
+      setLoading(false);
+    }, 1500);
+  };
 
   // ESC key handler
   useEffect(() => {
@@ -90,7 +79,7 @@ export default function Portfolio() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [fullscreen, active]);
 
-  // Lock background scroll when modal/fullscreen open
+  // Lock background scroll
   useEffect(() => {
     document.body.style.overflow = active || fullscreen ? "hidden" : "auto";
     return () => (document.body.style.overflow = "auto");
@@ -99,7 +88,7 @@ export default function Portfolio() {
   return (
     <section id="portfolio" className="py-40 bg-transparent relative">
       <div className="max-w-6xl mx-auto px-6">
-        <h2 className="text-3xl text-orange font-semibold mb-8 text-center" data-aos="fade-up">
+        <h2 className="text-3xl text-orange font-semibold mb-8 text-center">
           Our Work
         </h2>
 
@@ -119,3 +108,4 @@ export default function Portfolio() {
     </section>
   );
 }
+

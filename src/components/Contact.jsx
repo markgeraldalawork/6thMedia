@@ -54,20 +54,20 @@ export default function Contact() {
     <section id="contact" className="py-20" data-aos="fade-up">
       <div className="max-w-3xl mx-auto px-6 text-center">
         <h2 className="text-3xl text-orange font-semibold mb-4">Contact Us</h2>
-        <p className="text-gray-300 mb-6">Let’s create something beautiful together.</p>
+        <p className="text-[var(--text)] mb-6">Let’s create something beautiful together.</p>
 
         <form ref={formRef} onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
           <input
             name="from_name"
             required
-            className="p-3 rounded bg-gray-900"
+            className="p-3 rounded"
             placeholder="Your Name"
           />
           <input
             name="reply_to"
             type="email"
             required
-            className="p-3 rounded bg-gray-900"
+            className="p-3 rounded"
             placeholder="Your Email"
           />
           <input
@@ -75,13 +75,13 @@ export default function Contact() {
             type="tel"
             pattern="[0-9+ ]*"
             required
-            className="p-3 rounded bg-gray-900"
+            className="p-3 rounded"
             placeholder="Contact Number"
           />
           <textarea
             name="message"
             required
-            className="p-3 rounded bg-gray-900 min-h-[120px]"
+            className="p-3 rounded min-h-[120px]"
             placeholder="Your Message"
           ></textarea>
           <input type="hidden" name="time" value={new Date().toLocaleString()} />

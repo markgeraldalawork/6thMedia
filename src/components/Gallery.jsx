@@ -39,8 +39,8 @@ export default function Gallery({
     }
   };
 
-  // Only render modal if photos exist
-  const modalReady = active && active.photos && active.photos.length > 0;
+const modalReady = active && active.photos && active.photos.length > 0;
+
 
   return (
     <>
@@ -53,15 +53,13 @@ export default function Gallery({
             data-aos="zoom-in"
             onClick={() => handleCategoryClick(it)}
           >
-            <img
-              src={it.src}
-              alt={it.label}
-              loading="lazy"
-              onLoad={() => handleImageLoad(it.src)}
-              className={`w-full h-90 object-cover transition-transform duration-700 group-hover:scale-105 rounded-xl ${
-                loadedImages[it.src] ? "opacity-100 scale-100" : "opacity-0 scale-95"
-              }`}
-            />
+<img
+  src={it.src}
+  alt={it.label}
+  loading="lazy"
+  onLoad={() => handleImageLoad(it.src)}
+  className="w-full rounded-lg cursor-pointer transition-transform duration-300 hover:scale-[1.05] opacity-100 scale-100"
+/>
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
               <div className="w-full text-center py-4 text-orange font-semibold tracking-wide text-lg">
                 {it.label}

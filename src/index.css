@@ -2,26 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom utilities */
+/* =========================
+   Theme variables
+========================= */
+
 :root {
+  /* Light mode */
+  --bg: #FAF9F6;
+  --header-bg: #1a1a1a;
+  --header-text: #f9fafb;
+  --text: #111827;
   --orange: #ff7a00;
+  --placeholder: #6b7280;
 }
 
-html { scroll-behavior: smooth; }
-body { background-color: #0a0a0a; }
+.dark {
+  /* Dark mode (your current design) */
+  --bg: #0a0a0a;
+  --header-bg:#0a0a0a;
+  --header-text: #f9fafb;
+  --text: #f9fafb;
+  --placeholder: #9ca3af;
+}
 
-/* small helper for overlay blur */
+/* =========================
+   Base styles
+========================= */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Overlay helper */
 .bg-gradient-hero {
   background: linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.9));
 }
 
+/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
-}
-@keyframes fadeInModal {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
 }
 
 .animate-fadeIn {
@@ -64,7 +90,16 @@ body { background-color: #0a0a0a; }
   transform-origin: 35px 145px;
   animation: rotate 1.5s infinite ease-in-out;
 }
+input, textarea {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--text);
+}
 
+input::placeholder,
+textarea::placeholder {
+  color: var(--placeholder);
+}
 @keyframes slide {
   0% , 100% {
     bottom: -35px
